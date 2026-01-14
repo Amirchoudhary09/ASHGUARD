@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enchantress-SOS</title>
+    <!-- SwiperJS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="index.html"><img id="im" src="./images/Ench.png" alt="Quote Image"></a>
+        <a href="route.html" style="color: yellow;"><i class="fas fa-route"></i>Safe Route</a>
+        <a href="https://enchantress-chat-bot.vercel.app" style="color: greenyellow;"><i class="fas fa-robot"></i>AI Help</a>
+        <!-- <a href="#"><i class="fas fa-comments"></i>Chat</a> -->
+        <a href="https://enchantress-trips-planner.vercel.app/" style="color: pink;"><i class="fa-solid fa-plane"></i>Safe Trip</a>
+        <a href="sos.html" style="color: red;"><i class="fas fa-bell"></i>SOS</a>
+    </div>
+    <div class="container">
+        <div class="r">
+            <h1 class="sixth" style="color:red">Emergency-SOS</h1>
+        </div>
+        <h3 class="section-title" style="margin-left: 20px;margin-right: 20px;">Use these SOS features if you are in Trouble</h3>
+        <div class="containers">
+            <button class="btn" onclick="fakeCall()">Trigger Fake Call</button>
+            <button class="btn" id="recordButton" onclick="toggleRecording()">Start Recording</button>
+            <button class="btn" onclick="openSafestRoute()">Find Safest Route</button>
+            <button class="btn" onclick="dialEmergency()">Quick Dial 112</button>
+            <button class="btn" onclick="findSafeZones()">Nearby Safe Zones</button>
+            <button class="btn" onclick="playSiren()">Play Police Siren</button>
+            <button class="btn" onclick="openSelfDefense()">Self Defense Tutorial</button>
+        </div>
+        <div style="text-align: center;">
+            <h6>#(Below features are currently blocked due to Security concerns)</h6>
+        </div>
+        <div class="containers">
+            <button class="btn" onclick="sendSOS()">Send SOS Alert</button>
+            <button class="btn" onclick="shareLocation()">Share Live Location</button>
+        </div>
+    </div>
+
+    <!-- Audio for Police Siren -->
+    <audio id="sirenAudio" src="policeSiren.mp3"></audio>
+    <audio id="ringtone" src="ringtone.mp3" preload="auto"></audio>
+
+    <div class="v">
+        <h2 style="color: purple;">Recordings/Tutorials will be Shown Here</h2>
+        <video id="preview" autoplay></video>
+        <a id="downloadLink" style="color: #fff;display: none;text-decoration: none; background-color: purple; border-radius: 10px; padding:10px 10px 10px 10px; margin-left:30px;margin-right:30px; margin-bottom: 20px;">
+            Download Recording</a>
+        <div id="videoContainer" style="display: none;">
+            <iframe id="selfDefenseVideo" width="auto" height="180" src="" frameborder="0"
+                allow="autoplay; encrypted-media" allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+
+    <script>
+        // Function to send SOS alert
+        function sendSOS() {
+            alert('SOS Alert Sent to Emergency Contacts!');
+            // Add logic to send SOS to emergency contacts (e.g., via SMS or API)
+        }
+
+      // Function to share live location
+function shareLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const message = `Emergency! My current location is: https://maps.google.com/?q=${lat},${lng}`;
+            alert(`Location Shared: ${message}`);
+            // Add logic to share location via SMS or API
+        });
+    } else {
+        alert('Geolocation not supported');
+    }
+}
+
+
+        // Function to trigger a fake call
+        function fakeCall() {
+            const sirenAudio = document.getElementById('ringtone');
+            sirenAudio.play();
+            // alert('Police siren is playing.');
+        }
+
+        // Function to dial emergency number
+        function dialEmergency() {
+            window.location.href = 'tel:112';
+        }
+
+        // Function to start audio/video recording
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+
+        async function toggleRecording() {
+            const button = document.getElementById("recordButton");
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    document.getElementById("preview").srcObject = stream;
+
+                    mediaRecorder = new MediaRecorder(stream);
+                    recordedChunks = [];
+
+                    mediaRecorder.ondataavailable = event => recordedChunks.push(event.data);
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: "video/webm" });
+                        const url = URL.createObjectURL(blob);
+                        const downloadLink = document.getElementById("downloadLink");
+                        downloadLink.href = url;
+                        downloadLink.download = "recording.webm";
+                        downloadLink.style.display = "block";
+                        downloadLink.textContent = "Download Recording";
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    button.textContent = "Stop & Save Recording";
+                } catch (error) {
+                    console.error("Error accessing media devices:", error);
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                button.textContent = "Start Recording";
+            }
+        }
+
+        // Function to open self-defense tutorials
+        function openSelfDefense() {
+            const videoContainer = document.getElementById("videoContainer");
+            const video = document.getElementById("selfDefenseVideo");
+
+            video.src = "https://www.youtube.com/embed/KVpxP3ZZtAc?autoplay=1"; // YouTube embed link with autoplay
+            videoContainer.style.display = "block"; // Show the video
+        }
+
+        // Function to open safest route page
+        function openSafestRoute() {
+            window.location.href = 'route.html';
+        }
+
+        // Function to find nearby safe zones
+        function findSafeZones() {
+            window.location.href = 'https://maps.google.com?q=police+station';
+        }
+
+        // Function to play police siren sound
+        function playSiren() {
+            const sirenAudio = document.getElementById('sirenAudio');
+            sirenAudio.play();
+            // alert('Police siren is playing.');
+        }
+    </script>
+    <p style="color: #fff;font-size: 10px;text-align: center; margin-left: 30px; margin-right: 30px;">© 2025 Enchantress-AshGuard. All Rights Reserved by Arsh Chaudhary. | Terms of
+        Service | Privacy Policy.</p>
+</body>
+
+</html> 

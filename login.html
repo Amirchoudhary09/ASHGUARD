@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Login – AshGuard</title>
+  <link rel="stylesheet" href="index.css"> <!-- Link your existing CSS file -->
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    // Firebase Config (your config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1spFkxrOUht9_IndVbfJQn46F8aSP-uI",
+      authDomain: "enchantress-guardian.firebaseapp.com",
+      projectId: "enchantress-guardian",
+      storageBucket: "enchantress-guardian.firebasestorage.app",
+      messagingSenderId: "685057674017",
+      appId: "1:685057674017:web:9851462b386dd67f7a8c60",
+      measurementId: "G-ZFDC9NTCPR"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // DOM Elements
+    const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+    const userEmail = document.getElementById("user-email");
+
+    // Sign In with Google
+    loginBtn.addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          userInfo.style.display = "block";
+          userEmail.textContent = user.email;
+        })
+        .catch((error) => {
+          alert("Login Failed: " + error.message);
+        });
+    });
+
+    // Sign Out
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth)
+        .then(() => {
+          userInfo.style.display = "none";
+          userEmail.textContent = "";
+          alert("Logged out successfully!");
+        });
+    });
+
+    // Check login state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userInfo.style.display = "block";
+        userEmail.textContent = user.email;
+      } else {
+        userInfo.style.display = "none";
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="container" style="text-align: center; margin-top: 120px;">
+    <h2 class="section-title">AshGuard Login</h2>
+    <p class="r">Sign in securely with your Google Account</p>
+
+    <button class="btn" id="login-btn">Sign in with Google</button>
+
+    <div class="r" id="user-info" style="display: none; margin-top: 30px;">
+      <h3 style="color: white;">Welcome,</h3>
+      <p id="user-email" style="color: violet;"></p>
+      <button class="btn" style="background-color: purple;" id="logout-btn">Logout</button>
+    </div>
+  </div>
+</body>
+</html>
