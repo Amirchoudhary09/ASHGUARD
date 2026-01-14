@@ -81,12 +81,16 @@ git clone https://github.com/Amirchoudhary09/AshGuard.git
 
 # Install frontend dependencies
 cd frontend
+
 npm install
+
 npm run dev
 
 # Install backend dependencies
 cd backend
+
 npm install
+
 npm start
 
 🔮 Future Scope
@@ -109,8 +113,10 @@ Rapid growth in AI Travel Industry
 👨‍💻 Authors
 Amir Choudhary
 LinkedIn: https://linkedin.com/in/amirchoudhary09
+
 GitHub: https://github.com/Amirchoudhary09
 
 Arsh Chaudhary
 LinkedIn: https://www.linkedin.com/in/arsh-chaudhary-63a269258
+
 GitHub: https://github.com/ash92744
